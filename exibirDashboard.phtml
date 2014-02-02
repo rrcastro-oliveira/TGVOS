@@ -1,0 +1,121 @@
+<?php
+$v_params = $this->getParams();
+$o_nomeAB = $v_params['nome_abreviado'];
+?>
+<!DOCTYPE html>
+<html lang="pt-br">
+	<head>
+		<base href="<?php echo SERVER_URL; ?>" />
+		<meta charset="UTF-8">
+		<title>TGV OS - Sistema de gerenciamento de OS</title>
+		<link rel="stylesheet" type="text/css" href="public_html/css/default.css" />
+        <link href="public_html/favicon.ico" rel="icon" type="image/x-icon" />
+        <script src="public_html/js/jquery.js"></script>
+        <script src="http://code.highcharts.com/highcharts.js"></script>
+		<script src="http://code.highcharts.com/modules/exporting.js"></script>
+        <script>
+			$(document).ready(function(e) {
+				// Abrir login
+				$(document).on('click', this, function(e){
+					e = [e.target.id, e.target.parentNode.id].join('');
+					if(e !== 'login' && e !== 'nomelogin' && e !== 'nome') {
+						$("#login").removeClass('ativo');
+						$("#loginOpt").slideUp('fast');
+					}
+				});
+				$("#login").click(function(){
+					if($(this).attr('class') == 'ativo'){
+						$(this).removeClass('ativo');
+						$("#loginOpt").slideUp('fast');
+						
+					}else{
+						$(this).addClass('ativo');
+						$("#loginOpt").slideDown('fast');
+					}
+				});
+				
+				//Transicao da pagina
+				$('body').toggle();
+                $('.boxConteudo').eq(1).load('clientes/listarAjax');
+				$('.boxConteudo').eq(3).load('OS/listarAjax');
+				$(".menuLateral li a").click(function(event){
+					event.preventDefault();
+					link = this.href;
+					$("*").not('.closing').fadeOut('slow', function(){
+						window.location = link;
+					}); 
+				});
+				$(window).on('load', this, function(){
+					$('body').css("overflow-y", "hidden").fadeIn('slow', function(){
+						$(this).css("overflow-y", "auto");
+					});  
+				});
+				$('.boxConteudo').eq(0).highcharts({
+					title: {
+						text: 'Média de horas por cliente',
+						x: -20 //center
+					},
+					subtitle: {
+						text: 'Calculadas com base nas OS',
+						x: -20
+					},
+					xAxis: {
+						categories: ['Jan', 'Fev', 'Mar']
+					},
+					yAxis: {
+						title: {
+							text: 'Horas'
+						},
+						plotLines: [{
+							value: 0,
+							width: 1,
+							color: '#808080'
+						}]
+					},
+					tooltip: {
+						valueSuffix: 'Hrs'
+					},
+					legend: {
+						layout: 'vertical',
+						align: 'right',
+						verticalAlign: 'middle',
+						borderWidth: 0
+					},
+					series: [{
+						name: 'FNDE',
+						data: [7.0, 6.9, 9.5]
+					}, {
+						name: 'MCTI',
+						data: [-0.2, 0.8, 5.7]
+					}, {
+						name: 'DATASUS',
+						data: [-0.9, 0.6, 3.5]
+					}, {
+						name: 'SES',
+						data: [3.9, 4.2, 5.7]
+					}]
+        		});
+			});
+		</script>
+	</head>
+	<body>
+		<div id="boxPrincipal">
+        	<?php 
+				$menuAtivo = "./";
+				include('./views/template.php');
+			?>
+			<div id="conteudo">
+				<!-- INICIO DA PARTE EDITAVEL DE CODIGOS -->
+					<div class="boxConteudo noBorder">
+                    	
+                    </div>
+                    <div class="boxConteudo noBorder">&nbsp;</div>
+              		<div class="boxConteudo noBorder">
+                    	&nbsp;
+                    </div>
+                    <div class="boxConteudo noBorder">&nbsp;</div>
+             	<!-- FIM DA PARTE EDITAVEL DE CODIGOS -->
+			</div>
+		</div>
+	</body>
+</html>
